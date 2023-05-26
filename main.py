@@ -11,8 +11,12 @@ import PySimpleGUI as sg
 
 
 kaplan_meier_layout = [
-    [sg.Canvas(key='-CURVE-')],
-    [sg.Text("Survival days: "), sg.Combo([], size=(20,4), enable_events=False, key='-CURVE_X-')],
+    [sg.Canvas(size=(40, 40), key='-CURVE-')],
+    [   
+        sg.Text("Survival days: ",), sg.Combo([], size=(20,4), enable_events=False, key='-CURVE_X-'), 
+        sg.Text("Information presence: "), sg.Combo([], size=(20,4), enable_events=False, key='-CURVE_X-')
+    ],
+    [sg.Button("Save", key="-SAVE_CURVE-")]
 ]
 
 
