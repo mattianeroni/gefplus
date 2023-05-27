@@ -1,23 +1,12 @@
 import os
 import pandas as pd 
 import numpy as np
-import matplotlib.pyplot as plt 
-from sksurv.nonparametric import kaplan_meier_estimator
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
 import PySimpleGUI as sg
 #sg.theme("DarkBlue3")
 #sg.set_options(font=("Courier New", 16))
 
+from components.kaplan_meier import KaplanMeier 
 
-kaplan_meier_layout = [
-    [sg.Canvas(size=(40, 40), key='-CURVE-')],
-    [   
-        sg.Text("Survival days: ",), sg.Combo([], size=(20,4), enable_events=False, key='-CURVE_X-'), 
-        sg.Text("Information presence: "), sg.Combo([], size=(20,4), enable_events=False, key='-CURVE_X-')
-    ],
-    [sg.Button("Save", key="-SAVE_CURVE-")]
-]
 
 
 
@@ -36,7 +25,7 @@ layout = [
         sg.TabGroup(
             [[
                 sg.Tab("Anova", [], key='-ANOVA-'),
-                sg.Tab("KaplanMeier",kaplan_meier_layout)
+                sg.Tab("KaplanMeier", KaplanMeier.layout, key=KaplanMeier.code)
             ]], 
             key='-TAB_GROUP-'
         ),
@@ -60,20 +49,15 @@ def get_table_window(df):
             )
         ]
     ]
-    return sg.Window("DataTable", table_layout)
+    return sg.Window("DataTable", table_layout, finalize=True)
 
 
 
-def draw_figure(canvas, figure):
-    """ Draw figure into Canvas """
-    figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
-    figure_canvas_agg.draw()
-    figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
-    return figure_canvas_agg
+
 
 
 # Create the main window
-window = sg.Window("GEF+", layout)
+window = sg.Window("GEF+", layout, resizable=True)
 
 # Initialise the data table window
 table_window = None
@@ -81,12 +65,18 @@ table_window = None
 # Initialise the current data dataframe
 df = None
 
+# Initialise Kaplan Meier component
+kaplan_maier = None 
 
 # Create an event loop
 while True:
-    if table_window is not None:
-        table_window.read()
+
+    #if table_window is not None:
+    #    table_window.read()
+
     event, values = window.read()
+
+    print(event, values)
 
     # End program if user closes window
     if event == sg.WIN_CLOSED:
@@ -100,17 +90,14 @@ while True:
         df = pd.read_csv(filename)
         table_window = get_table_window(df)
         
-        # Update fields used for graphs computation
-        options = df.columns.values.tolist()
-        window["-CURVE_X-"].update(value=options[0], values=options)
-
-        # Compute the Kaplan Meier curve
-        time, survival_prob = kaplan_meier_estimator(df["DeathRegistered"], df["SurvivalDays"])
-        fig, ax = plt.subplots()
-        ax.step(time, survival_prob, where="post")
-        ax.set_ylabel("Probability of survival")
-        draw_figure(window['-CURVE-'].TKCanvas, fig)
+        # Update Kaplan Maier
+        kaplan_maier = KaplanMeier(window, df)
+    
+    if kaplan_maier is not None:
+        kaplan_maier.trigger(event, values)
 
 
 
 window.close()
+if table_window is not None:
+    table_window.close()
