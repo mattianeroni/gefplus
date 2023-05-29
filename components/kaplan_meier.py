@@ -45,27 +45,54 @@ class KaplanMeier:
         options = df.columns.values.tolist()
         window["-KAPLAN_MEIER_X-"].update(value=options[0], values=options)
         window["-KAPLAN_MEIER_Y-"].update(value=options[1], values=options)
+        window["-KAPLAN_MEIER_FILTER-"].update(value="", values=[""] + options)
         
         # Remember the data source and the currently considered data
         self.window = window
         self.df = df 
-        self.death_registered = df[options[0]]
-        self.survival_time = df[options[1]]
+        self.death_registered_field = options[0]
+        self.survival_time_field = options[1]
+        self.filter_field = ""
+        self.canvas = None 
+        self.figure = None
 
         # Compute curve and update the figure 
         self.compute_curve()
 
 
+
     def compute_curve (self):
         """ Compute the Kaplan Meier curve """
-        try:
-            time, survival_prob = kaplan_meier_estimator(self.death_registered, self.survival_time)
-        except Exception as e:
-            time, survival_prob = tuple(), tuple()
-            
-        # Plot and save the figure
+        if self.canvas is not None:
+            self.canvas.get_tk_widget().forget()
+
+        # Init figure and axes
         fig, ax = plt.subplots()
-        ax.step(time, survival_prob, where="post")
+
+        if self.filter_field == "":
+            try:
+                time, survival_prob = kaplan_meier_estimator(self.df[self.death_registered_field], self.df[self.survival_time_field])
+            except Exception as e:
+                time, survival_prob = tuple(), tuple()
+                
+            # Plot data
+            ax.step(time, survival_prob, where="post")
+
+        else:
+            groups = self.df[self.filter_field].unique()
+            
+            for group in groups:
+                subdf = self.df[self.df[self.filter_field] == group]
+                
+                try:
+                    time, survival_prob = kaplan_meier_estimator(subdf[self.death_registered_field], subdf[self.survival_time_field])
+                except Exception as e:
+                    time, survival_prob = tuple(), tuple()
+    
+                ax.step(time, survival_prob, where="post", label=f"{group} (n = {subdf.shape[0]})")
+
+            ax.legend(loc='upper right')
+
         ax.set_ylabel("Probability of survival")
         ax.set_xlabel("Time")
 
@@ -78,10 +105,13 @@ class KaplanMeier:
 
         # Update x and y axis of curve
         if event == "-KAPLAN_MEIER_X-" or event == "-KAPLAN_MEIER_Y-":
-            df = self.df
-            self.canvas.get_tk_widget().forget()
-            self.death_registered = df[values["-KAPLAN_MEIER_Y-"]]
-            self.survival_time = df[values["-KAPLAN_MEIER_X-"]]
+            self.death_registered_field = values["-KAPLAN_MEIER_Y-"]
+            self.survival_time_field = values["-KAPLAN_MEIER_X-"]
+            self.compute_curve()
+
+        # Update the filter 
+        elif event == '-KAPLAN_MEIER_FILTER-':
+            self.filter_field = values["-KAPLAN_MEIER_FILTER-"]
             self.compute_curve()
 
         # Save the plot

@@ -6,7 +6,7 @@ import PySimpleGUI as sg
 #sg.set_options(font=("Courier New", 16))
 
 from components.kaplan_meier import KaplanMeier 
-
+from components.anova import Anova 
 
 
 
@@ -24,7 +24,7 @@ layout = [
     [
         sg.TabGroup(
             [[
-                sg.Tab("Anova", [], key='-ANOVA-'),
+                sg.Tab("Anova", Anova.layout, key=Anova.code),
                 sg.Tab("KaplanMeier", KaplanMeier.layout, key=KaplanMeier.code)
             ]], 
             key='-TAB_GROUP-'
