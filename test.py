@@ -10,5 +10,5 @@ df = pd.read_csv("results.csv")
 #df = pg.read_dataset('mixed_anova')
 
 # Run the ANOVA
-aov = pg.anova(data=df, dv="SurvivalDays", between=('Age_in_years', "Karnofsky_score"), detailed=True)
+aov = pg.anova(data=df, dv="SurvivalDays", between="Celltype", detailed=True)
 print(aov)

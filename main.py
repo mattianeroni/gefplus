@@ -24,8 +24,8 @@ layout = [
     [
         sg.TabGroup(
             [[
+                sg.Tab("KaplanMeier", KaplanMeier.layout, key=KaplanMeier.code),
                 sg.Tab("Anova", Anova.layout, key=Anova.code),
-                sg.Tab("KaplanMeier", KaplanMeier.layout, key=KaplanMeier.code)
             ]], 
             key='-TAB_GROUP-'
         ),
@@ -65,8 +65,8 @@ table_window = None
 # Initialise the current data dataframe
 df = None
 
-# Initialise Kaplan Meier component
-kaplan_maier = None 
+# Initialise components
+kaplan_maier, anova = None, None 
 
 # Create an event loop
 while True:
@@ -90,12 +90,15 @@ while True:
         df = pd.read_csv(filename)
         table_window = get_table_window(df)
         
-        # Update Kaplan Maier
+        # Update components
         kaplan_maier = KaplanMeier(window, df)
+        anova = Anova(window, df)
     
     if kaplan_maier is not None:
         kaplan_maier.trigger(event, values)
 
+    if anova is not None:
+        anova.trigger(event, values)
 
 
 window.close()
