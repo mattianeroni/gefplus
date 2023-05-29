@@ -7,9 +7,10 @@ import PySimpleGUI as sg
 
 from components.kaplan_meier import KaplanMeier 
 from components.anova import Anova 
+from components.table import DataTable
 
 
-
+# Main page layout
 layout = [
     [
         sg.Column([[sg.Text("Welcome to GEF+!")]]),
@@ -31,29 +32,6 @@ layout = [
         ),
     ],
 ]
-
-
-
-
-def get_table_window(df):
-    """ Create a new window to show the data table """
-    table_layout = [
-        [
-            sg.Table(
-                values=df.values.tolist(), 
-                headings=df.columns.values.tolist(), 
-                auto_size_columns=True, 
-                enable_events=True, 
-                size=(40, 20),
-                justification='center',
-            )
-        ]
-    ]
-    return sg.Window("DataTable", table_layout, finalize=True)
-
-
-
-
 
 
 # Create the main window
@@ -88,7 +66,7 @@ while True:
 
         # Update the dataframe and the table window
         df = pd.read_csv(filename)
-        table_window = get_table_window(df)
+        table_window = DataTable(df, finalize=True) #get_table_window(df)
         
         # Update components
         kaplan_maier = KaplanMeier(window, df)
