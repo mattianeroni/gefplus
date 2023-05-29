@@ -9,5 +9,5 @@ The application includes several components such as:
 - TODO
 
 
-![alt text](https://github.com/mattianeroni/gefplus/blob/main/images/test.png)
+<p align="center"><image src="https://github.com/mattianeroni/gefplus/blob/main/images/test.png" width="50%" height="50%"></image></p>
 
