@@ -18,6 +18,9 @@ def draw_figure(canvas, figure):
 
 class KaplanMeier:
 
+    """ Kapla Meier indicator is a function, which relates time 
+    to the probability of surviving beyond a given time point """
+
     code = "-KAPLAN_MEIER"
 
     layout = [

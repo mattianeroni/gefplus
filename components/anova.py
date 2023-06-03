@@ -5,6 +5,14 @@ import pingouin as pg
 
 class Anova:
 
+    """ Analysis of variance (ANOVA) is a statistical approach used to analyze 
+    the differences among means. 
+    ANOVA is based on the law of total variance, where the observed variance in
+    a particular variable is partitioned into components attributable to different 
+    sources of variation. 
+    In its simplest form, ANOVA provides a statistical test of whether two or more 
+    population means are equal, and therefore generalizes the t-test beyond two means """
+
     code = "-ANOVA-"
 
 

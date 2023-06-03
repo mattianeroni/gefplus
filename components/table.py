@@ -1,5 +1,21 @@
 import PySimpleGUI as sg
 import pandas as pd 
+from pandas.api.types import is_numeric_dtype
+
+
+def import_data_table (filename):
+    """ Import a datatable and convert it into a pandas DataFrame """
+    # Read the dataframe
+    df = pd.read_csv(filename)
+
+    # Convert non-numeric columns to category dtype
+    for i in df.columns.values:
+        if not is_numeric_dtype(df[i]):
+            print(i)
+            df[i] = df[i].astype("category")
+
+    return df 
+
 
 
 class DataTable(sg.Window):
