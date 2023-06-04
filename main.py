@@ -8,7 +8,9 @@ import PySimpleGUI as sg
 from components.kaplan_meier import KaplanMeier 
 from components.anova import Anova 
 from components.table import DataTable, import_data_table
-from components.cox_proportional_hazard import CoxProportionalHazard
+from components.prediction import Prediction
+from components.features_selector import FeatureSelector
+
 
 
 # Main page layout
@@ -28,7 +30,8 @@ layout = [
             [[
                 sg.Tab("KaplanMeier", KaplanMeier.layout, key=KaplanMeier.code),
                 sg.Tab("Anova", Anova.layout, key=Anova.code),
-                sg.Tab("CoxPH", CoxProportionalHazard.layout, key=CoxProportionalHazard.code),
+                sg.Tab("Features", FeatureSelector.layout, key=FeatureSelector.code),
+                sg.Tab("Prediction", Prediction.layout, key=Prediction.code),
             ]], 
             key='-TAB_GROUP-'
         ),
@@ -46,7 +49,7 @@ table_window = None
 df = None
 
 # Initialise components
-kaplan_maier, anova, cox_model = None, None, None 
+kaplan_maier, anova, features_selector, estimator = None, None, None, None 
 
 # Create an event loop
 while True:
@@ -73,13 +76,16 @@ while True:
         # Update components
         kaplan_maier = KaplanMeier(window, df)
         anova = Anova(window, df)
-        cox_model = CoxProportionalHazard(window, df)
+        features_selector = FeatureSelector(window, df)
     
     if kaplan_maier is not None:
         kaplan_maier.trigger(event, values)
 
     if anova is not None:
         anova.trigger(event, values)
+
+    if features_selector is not None:
+        features_selector.trigger(event, values)
 
 
 window.close()

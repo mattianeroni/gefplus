@@ -46,10 +46,7 @@ class Anova:
         window["-ANOVA_FACTORS-"].update(fields)
         window["-ANOVA_Y-"].update(value=fields[0], values=fields)
 
-        try:
-            self.result_table = pg.anova(data=self.df, dv=values["-ANOVA_Y-"], between=values["-ANOVA_FACTORS-"], detailed=True).values.tolist()
-        except:
-            self.result_table = []
+        self.result_table = []
 
 
 

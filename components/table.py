@@ -11,7 +11,6 @@ def import_data_table (filename):
     # Convert non-numeric columns to category dtype
     for i in df.columns.values:
         if not is_numeric_dtype(df[i]):
-            print(i)
             df[i] = df[i].astype("category")
 
     return df 

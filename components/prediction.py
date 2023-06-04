@@ -5,12 +5,18 @@ from sksurv.preprocessing import OneHotEncoder
 
 
 
-class CoxProportionalHazard:
+class Prediction:
 
-    """ Cox’s proportional hazard’s is a linear model 
-    to estimate the impact each variable has on survival """
+    """ 
+    This component offers the possibility to carry out different
+    predictions through different multivariate survival models:
+    
+        - Cox’s proportional hazard’s
+        - 
+        
+    """
 
-    code = "-COX_PH-"
+    code = "-PREDICTION-"
 
     layout = [
 
@@ -24,9 +30,8 @@ class CoxProportionalHazard:
         :param window: The window where the component is drawn
         :param df: The dataframe of the main data table 
         
-        NOTE: The dataframe kept in memory by the Cox Proportional Hazard's model
-        may differ from original data table, because cathegorical variables are 
-        made numeric.
+        NOTE: The dataframe kept in memory may differ from original data 
+        table, because cathegorical variables are made numeric.
 
         """
         self.window = window 

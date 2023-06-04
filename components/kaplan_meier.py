@@ -26,12 +26,11 @@ class KaplanMeier:
     layout = [
         [sg.Canvas(size=(40, 40), key='-KAPLAN_MEIER_IMAGE-')],
         [   
-            sg.Text("Survival days:",), sg.Combo([], size=(20,4), enable_events=True, key='-KAPLAN_MEIER_X-'), 
-            sg.Text("Information presence:"), sg.Combo([], size=(20,4), enable_events=True, key='-KAPLAN_MEIER_Y-'),
-            #sg.Button("Update", enable_events=True, key="-UPDATE_KAPLAN_MEIER-")
+            sg.Text("Survival:",), sg.Combo([], size=(20,4), enable_events=True, key='-KAPLAN_MEIER_X-'), 
+            sg.Text("Status:"), sg.Combo([], size=(20,4), enable_events=True, key='-KAPLAN_MEIER_Y-'),
         ],
         [
-            sg.Text("Filter:       "), sg.Combo([], size=(20,4), enable_events=True, key='-KAPLAN_MEIER_FILTER-'),
+            sg.Text("Filter:  "), sg.Combo([], size=(20,4), enable_events=True, key='-KAPLAN_MEIER_FILTER-'),
         ],
         [sg.FileSaveAs("Save", enable_events=True, key="-SAVE_KAPLAN_MEIER-", file_types=(('PNG', '*.png'),))]
     ]
