@@ -1,11 +1,20 @@
 import PySimpleGUI as sg
-import pandas as pd 
+import pandas as pd
+from pandas.api.types import is_numeric_dtype 
 import numpy as np 
+import matplotlib.pyplot as plt 
 import sklearn
 from sksurv.preprocessing import OneHotEncoder
 from sksurv.linear_model import CoxPHSurvivalAnalysis
+from sksurv.metrics import (
+    concordance_index_censored,
+    concordance_index_ipcw,
+    cumulative_dynamic_auc,
+    integrated_brier_score,
+)
 
 sklearn.set_config(display="text")
+plt.rcParams["figure.figsize"] = [7.2, 4.8]
 
 
 
@@ -23,17 +32,25 @@ class FeatureSelector:
                 headings=[" " * 5  + "Feature" + " " * 5, " " * 5 + "Score" + " " * 5], 
                 auto_size_columns=False, 
                 enable_events=True, 
-                col_widths=[40, 40],
+                col_widths=[40, 20],
                 justification='center',
                 key="-FEATURES_SELECTOR_TABLE-",
             )
+        ],
+        [
+            sg.Canvas(size=(40, 40), key='-AUC_IMAGE-')
         ],
         [   
             sg.Text("Survival:",), sg.Combo([], size=(20,4), enable_events=True, key='-FEATURES_SELECTOR_SURVIVAL-'), 
             sg.Text("Status:"), sg.Combo([], size=(20,4), enable_events=True, key='-FEATURES_SELECTOR_STATUS-'),
             sg.Text("Model:"), sg.Combo([], size=(20,4), enable_events=True, key='-FEATURES_SELECTOR_MODEL-'),
         ],
-        [sg.FileSaveAs("Save", enable_events=True, key="-SAVE_FEATURES-", file_types=(('CSV', '*.csv'),))]
+        [sg.Text("Affected features:")],
+        [sg.Text("         "), sg.Listbox([], size=(20, 4), select_mode='extended', enable_events=True,  key='-AFFECTED_FEATURES-')],
+        [
+            sg.FileSaveAs("Save Scores", enable_events=True, key="-SAVE_FEATURES-", file_types=(('CSV', '*.csv'),)),
+            sg.FileSaveAs("Save AUC", enable_events=True, key="-SAVE_AUC-", file_types=(('PNG', '*.png'),)),
+        ]
     ]
 
 
@@ -63,6 +80,10 @@ class FeatureSelector:
         window["-FEATURES_SELECTOR_SURVIVAL-"].update(value=fields[0], values=fields)
         window["-FEATURES_SELECTOR_STATUS-"].update(value=fields[0], values=fields)
         window["-FEATURES_SELECTOR_MODEL-"].update(value=self.supported_models[0], values=self.supported_models)
+
+        # Affected features
+        fields = [i for i in df.columns.values if is_numeric_dtype(df[i])]
+        window["-ANOVA_FACTORS-"].update(fields)
 
         # Compute the starting results if possible
         self.results = None
@@ -98,7 +119,11 @@ class FeatureSelector:
                 self.results = None
 
             
-
         # Save the anova table
         elif event == "-SAVE_FEATURES-":
             self.results.to_csv(values["-SAVE_FEATURES-"])
+        
+        # Save the AUC curve of features
+        elif event == "-SAVE_AUC-":
+            plt.figure(self.figure.number)
+            plt.savefig(values["-SAVE_AUC-"])

@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 from sksurv.nonparametric import kaplan_meier_estimator
 from PIL import Image 
 
+# Set Figure size
+plt.rcParams["figure.figsize"] = [7.2, 4.8]
+
 
 def draw_figure(canvas, figure):
     """ Draw figure into Canvas """
@@ -60,6 +63,7 @@ class KaplanMeier:
 
         # Compute curve and update the figure 
         self.compute_curve()
+        
 
 
 
@@ -69,7 +73,7 @@ class KaplanMeier:
             self.canvas.get_tk_widget().forget()
 
         # Init figure and axes
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots() 
 
         if self.filter_field == "":
             try:
@@ -97,7 +101,6 @@ class KaplanMeier:
 
         ax.set_ylabel("Probability of survival")
         ax.set_xlabel("Time")
-
         self.canvas = draw_figure(self.window['-KAPLAN_MEIER_IMAGE-'].TKCanvas, fig)
         self.figure = fig 
 

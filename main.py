@@ -2,6 +2,8 @@ import os
 import pandas as pd 
 import numpy as np
 import PySimpleGUI as sg
+
+
 #sg.theme("DarkBlue3")
 #sg.set_options(font=("Courier New", 16))
 
@@ -21,6 +23,8 @@ layout = [
         sg.Column([[
             sg.FileBrowse("Import", file_types=[("CSV", "*.csv"), ("Text", "*.txt")], 
             enable_events=True, key="-BROWSER-")]]),
+        sg.VSeparator(),
+        sg.Checkbox(" Autofill ", default=False, key="-AUTOFILL-")
     ],
     [
         sg.HSeparator()
@@ -68,11 +72,15 @@ while True:
     # A file to analyse has been choosen
     if event == "-BROWSER-":
         filename = values["-BROWSER-"]
+        autofill = values["-AUTOFILL-"]
 
-        # Update the dataframe and the table window
-        df = import_data_table(filename)
-        table_window = DataTable(df, finalize=True) 
-        
+        print(autofill)
+
+        # Update the dataframe and the table window, by eventually
+        # autofilling the missing values
+        df = import_data_table(filename, autofill=autofill)
+        table_window = DataTable(df, finalize=True)
+
         # Update components
         kaplan_maier = KaplanMeier(window, df)
         anova = Anova(window, df)

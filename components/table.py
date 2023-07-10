@@ -1,12 +1,18 @@
 import PySimpleGUI as sg
 import pandas as pd 
 from pandas.api.types import is_numeric_dtype
+from sklearn.impute import SimpleImputer
 
 
-def import_data_table (filename):
+
+def import_data_table (filename, autofill=False):
     """ Import a datatable and convert it into a pandas DataFrame """
     # Read the dataframe
     df = pd.read_csv(filename)
+    if autofill:
+        cols = df.columns
+        df = pd.DataFrame(SimpleImputer(strategy="most_frequent").fit(df.values).transform(df.values).tolist())
+        df.columns = cols
 
     # Convert non-numeric columns to category dtype
     for i in df.columns.values:

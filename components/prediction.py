@@ -36,3 +36,9 @@ class Prediction:
         """
         self.window = window 
         self.df = OneHotEncoder().fit_transform(df)
+
+        self.models = {
+            "Cox": CoxPHSurvivalAnalysis,
+            
+        }
+        self.supported_models = tuple(self.models.keys())
