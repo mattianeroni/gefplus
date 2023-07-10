@@ -69,7 +69,6 @@ class FeatureSelector:
         self.df = OneHotEncoder().fit_transform(df)
         
         # Fixed attributes
-        #self.headers = (" " * 5  + "Feature" + " " * 5, " " * 5 + "Score" + " " * 5)
         self.models = {
             "Cox": CoxPHSurvivalAnalysis,
         }
@@ -81,47 +80,73 @@ class FeatureSelector:
         window["-FEATURES_SELECTOR_STATUS-"].update(value=fields[0], values=fields)
         window["-FEATURES_SELECTOR_MODEL-"].update(value=self.supported_models[0], values=self.supported_models)
 
+        # Compute the starting results if possible
+        self.result_table = []
+        self.status_field = fields[0]
+        self.survival_field = fields[1]
+        self.current_model = tuple(self.models.values())[0]
+        self.figure = None
+        self.canvas = None
+
         # Affected features
         fields = [i for i in df.columns.values if is_numeric_dtype(df[i])]
         window["-ANOVA_FACTORS-"].update(fields)
 
-        # Compute the starting results if possible
-        self.results = None
-
 
     @staticmethod
     def _feature_score (estimator, feature_x, y):
+        """ Estimate the effect of a single feature on the survival """
         estimator.fit(feature_x, y)
         return estimator.score(feature_x, y)
 
 
+    def compute_table (self):
+        """ Compute the table of features and relative impacts """
+
+        # Format the output as required
+        y = np.array(list(zip(self.df[self.status_field], self.df[self.survival_field])), dtype=[('Status', '?'), ('Survival', '<f8')])
+
+        # Compute the scores for each feature
+        fields_to_score = tuple(field for field in self.df.columns 
+            if field != self.status_field and field != self.survival_field and is_numeric_dtype(self.df[field])) 
+
+        scores = np.array([
+            self._feature_score(self.current_model, self.df[field].values.reshape(-1, 1), y)  for field in fields_to_score
+        ]).astype(np.float32)
+
+        self.result_table = pd.Series(scores, index=fields_to_score).sort_values(ascending=False)
+        self.window["-FEATURES_SELECTOR_TABLE-"].update( list(zip(self.result_table.index.values, self.result_table.values)) )
+
+
+    def compute_auc (self):
+        pass 
+
+
     def trigger(self, event, values):
+        """ Check if the current event trigger something in the component """
+
         if event == '-FEATURES_SELECTOR_SURVIVAL-' or event == '-FEATURES_SELECTOR_STATUS-' or event == '-FEATURES_SELECTOR_MODEL-':
             try:
                 # Intantiate the estimator
-                estimator = self.models[values["-FEATURES_SELECTOR_MODEL-"]]()
-
+                self.current_model = self.models[values["-FEATURES_SELECTOR_MODEL-"]]()
                 # Get the expected output
-                status_field, survival_field = values["-FEATURES_SELECTOR_STATUS-"], values["-FEATURES_SELECTOR_SURVIVAL-"]
-                y = np.array(list(zip(self.df[status_field], self.df[survival_field])), dtype=[('Status', '?'), ('Survival', '<f8')])
-
-                # Compute the scores for each feature
-                fields_to_score = tuple(field for field in self.df.columns if field != status_field and field != survival_field)
-
-                scores = np.array([
-                    self._feature_score(estimator, self.df[field].values.reshape(-1, 1), y)  for field in fields_to_score
-                ]).astype(np.float32)
-
-                self.results = pd.Series(scores, index=fields_to_score).sort_values(ascending=False)
-                self.window["-FEATURES_SELECTOR_TABLE-"].update( list(zip(self.results.index.values, self.results.values)) )
+                self.status_field, self.survival_field = values["-FEATURES_SELECTOR_STATUS-"], values["-FEATURES_SELECTOR_SURVIVAL-"]
+                # Compute the table of features
+                self.compute_table()
+                
 
             except Exception as ex:
-                self.results = None
-
+                # Set everything to null
+                fields = self.df.columns.tolist()
+                self.result_table = []
+                self.status_field = fields[0]
+                self.survival_field = fields[1]
+                self.figure = None 
+                self.canvas = None
             
-        # Save the anova table
+        # Save the table
         elif event == "-SAVE_FEATURES-":
-            self.results.to_csv(values["-SAVE_FEATURES-"])
+            self.result_table.to_csv(values["-SAVE_FEATURES-"])
         
         # Save the AUC curve of features
         elif event == "-SAVE_AUC-":
