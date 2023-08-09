@@ -162,8 +162,6 @@ class TableModel(QAbstractTableModel):
         if role == Qt.EditRole:
             # Set the value into the data frame.
             self.df.iloc[index.row(), index.column()] = value
-            print(self.df is self.parent.df)
-            #print(self.parent.kaplan_meier.df)
             return True
         return False
 
