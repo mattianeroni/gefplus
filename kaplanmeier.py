@@ -40,6 +40,8 @@ class KaplanMeierTab(QWidget):
         self.dropping_layout = None
 
         # Init parameters for analysis
+        self.scroll_layout = None 
+        self.scroll_holder = None
         self.survival_var = None 
         self.status_var = None 
         self.filters_var = set()
@@ -63,9 +65,10 @@ class KaplanMeierTab(QWidget):
             btn = DragButton(header, self)
             self.scroll_layout.addWidget(btn)
 
-        holder = QWidget()
-        holder.setLayout(self.scroll_layout)
-        self.scrollArea.setWidget(holder) 
+        self.scroll_holder = QWidget()
+        self.scroll_holder.setLayout(self.scroll_layout)
+        self.scroll_holder.setStyleSheet("border-color:black;")
+        self.scrollArea.setWidget(self.scroll_holder) 
 
     def dragEnterEvent(self, event):
         """ Method to accept dragging """
@@ -74,7 +77,7 @@ class KaplanMeierTab(QWidget):
     def add_dummy_widgets(self):
         """ Add a dummy widget to the layouts to ensure 
         the drag n' drop functioning """
-        for layout in (self.status_layout, self.survival_layout, self.scroll_layout, self.filters_layout):
+        for layout in (self.status_layout, self.survival_layout, self.filters_layout):
             if layout.count() == 0:
                 layout.addWidget(QWidget())
 
@@ -95,8 +98,17 @@ class KaplanMeierTab(QWidget):
         # Filter variable is being removed 
         self.filters_var.discard(text)
 
+        # Verify first a reinsertion in the scroll area
+        widget = self.scroll_holder
+        if widget.x() < pos.x() < widget.x() + widget.size().width() \
+            and widget.y() < pos.y() < widget.y() + widget.size().height():
+                self.scroll_layout.addWidget(button)
+                event.accept()
+                self.add_dummy_widgets()
+                self.plot()
+                return
         
-        for layout in (self.filters_layout, self.scroll_layout, self.status_layout, self.survival_layout):
+        for layout in (self.filters_layout, self.status_layout, self.survival_layout):
             
             for i in range(layout.count()):  
                 
@@ -110,12 +122,6 @@ class KaplanMeierTab(QWidget):
 
                         layout.insertWidget(i - 1, button)
                         self.filters_var.add(text)
-
-                    elif layout == self.scroll_layout:
-                        if not isinstance(widget, DragButton):
-                            layout.removeWidget(widget)
-                        
-                        layout.insertWidget(i - 1, button)
 
                     elif layout == self.status_layout:
                         layout.removeWidget(widget) 
