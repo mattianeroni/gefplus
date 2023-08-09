@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GEF</class>
+ <widget class="QMainWindow" name="GEF">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>890</width>
+    <height>436</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GEF+</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>static/logosmall.png</normaloff>static/logosmall.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout"/>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>890</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <widget class="QMenu" name="menuExport">
+     <property name="title">
+      <string>Export</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>static/export.png</normaloff>static/export.png</iconset>
+     </property>
+     <addaction name="actionExport_Current"/>
+     <addaction name="actionCSV_csv"/>
+    </widget>
+    <addaction name="actionImport"/>
+    <addaction name="menuExport"/>
+    <addaction name="actionSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuProperties">
+    <property name="title">
+     <string>Properties</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="actionAutocomplete"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuData"/>
+   <addaction name="menuProperties"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionImport">
+   <property name="icon">
+    <iconset>
+     <normalon>static/import.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>New Import</string>
+   </property>
+  </action>
+  <action name="settings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionExport_Current">
+   <property name="text">
+    <string>Text (.txt)</string>
+   </property>
+  </action>
+  <action name="actionCSV_csv">
+   <property name="text">
+    <string>CSV (.csv)</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="icon">
+    <iconset>
+     <normaloff>static/settings.png</normaloff>static/settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionAutocomplete">
+   <property name="icon">
+    <iconset>
+     <normaloff>static/autofill.png</normaloff>static/autofill.png</iconset>
+   </property>
+   <property name="text">
+    <string>Autocomplete</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,5 +1,5 @@
 Age_in_years,Celltype,Karnofsky_score,Months_from_Diagnosis,Prior_therapy,Treatment,SurvivalDays,Status
-69.0,,60.0,7.0,no,standard,72.0,True
+69.0,squamous,60.0,7.0,no,standard,72.0,True
 64.0,squamous,70.0,5.0,yes,standard,411.0,True
 38.0,squamous,60.0,3.0,no,standard,228.0,True
 63.0,squamous,60.0,9.0,yes,standard,126.0,True
