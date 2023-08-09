@@ -108,10 +108,9 @@ class KaplanMeierTab(QWidget):
                 self.plot()
                 return
         
+        # Then verify the insertion in the other areas --i.e., filters, status, and survival
         for layout in (self.filters_layout, self.status_layout, self.survival_layout):
-            
             for i in range(layout.count()):  
-                
                 widget = layout.itemAt(i).widget()
                 if widget.x() < pos.x() < widget.x() + widget.size().width() \
                     and widget.y() < pos.y() < widget.y() + widget.size().height():
