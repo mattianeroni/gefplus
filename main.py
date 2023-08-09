@@ -175,7 +175,7 @@ class TableTab(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        uic.loadUi("table2.ui", self)
+        uic.loadUi("table.ui", self)
         self.df = parent.df
         self.model = TableModel(self.df)
         self.table.setModel(self.model)
