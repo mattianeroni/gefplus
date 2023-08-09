@@ -15,8 +15,6 @@ from table import TableTab
 
 
 
-
-
 class MainUI (QMainWindow):
 
     """ This class represents the main UI the whole application starts from """
