@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>static/logosmall.png</normaloff>static/logosmall.png</iconset>
+    <normaloff>../static/logosmall.png</normaloff>../static/logosmall.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout"/>
@@ -39,7 +39,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>static/export.png</normaloff>static/export.png</iconset>
+       <normaloff>../static/export.png</normaloff>../static/export.png</iconset>
      </property>
      <addaction name="actionExport_Current"/>
      <addaction name="actionCSV_csv"/>
@@ -47,11 +47,6 @@
     <addaction name="actionImport"/>
     <addaction name="menuExport"/>
     <addaction name="actionSettings"/>
-   </widget>
-   <widget class="QMenu" name="menuProperties">
-    <property name="title">
-     <string>Properties</string>
-    </property>
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
@@ -61,14 +56,12 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
-   <addaction name="menuProperties"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionImport">
    <property name="icon">
     <iconset>
-     <normalon>static/import.png</normalon>
-    </iconset>
+     <normaloff>../static/import.png</normaloff>../static/import.png</iconset>
    </property>
    <property name="text">
     <string>New Import</string>
@@ -92,7 +85,7 @@
   <action name="actionSettings">
    <property name="icon">
     <iconset>
-     <normaloff>static/settings.png</normaloff>static/settings.png</iconset>
+     <normaloff>../static/settings.png</normaloff>../static/settings.png</iconset>
    </property>
    <property name="text">
     <string>Settings</string>
@@ -101,7 +94,7 @@
   <action name="actionAutocomplete">
    <property name="icon">
     <iconset>
-     <normaloff>static/autofill.png</normaloff>static/autofill.png</iconset>
+     <normaloff>../static/autofill.png</normaloff>../static/autofill.png</iconset>
    </property>
    <property name="text">
     <string>Autocomplete</string>
