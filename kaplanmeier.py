@@ -36,8 +36,6 @@ class KaplanMeierTab(QWidget):
 
         # Allow drag n' drop
         self.setAcceptDrops(True)
-        self.dropping_widget = None 
-        self.dropping_layout = None
 
         # Init parameters for analysis
         self.scroll_layout = None 

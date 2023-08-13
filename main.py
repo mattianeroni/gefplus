@@ -11,6 +11,7 @@ import pandas as pd
 from autofill import AutoFill
 from kaplanmeier import KaplanMeierTab
 from table import TableTab
+from anova import AnovaTab
 
 
 
@@ -36,10 +37,12 @@ class MainUI (QMainWindow):
         # Init a tab for each supported functionality
         self.table = TableTab(self)
         self.kaplan_meier = KaplanMeierTab(self)
+        self.anova = AnovaTab(self)
 
         # Add tabs to the QTabWidget
         self.tabs.addTab(self.table, "Table")
         self.tabs.addTab(self.kaplan_meier, "KaplanMeier")
+        self.tabs.addTab(self.anova, "Anova")
         
         # Actions
         self.actionImport.triggered.connect(self.load_data)             # import a new dataset
@@ -62,18 +65,23 @@ class MainUI (QMainWindow):
 
     def load_data (self):
         """ Import the dataset """
-        self.status_message("Loading...")
+        try:
+            self.status_message("Loading...")
 
-        # Import the dataframe
-        filename = QFileDialog.getOpenFileName(self, 'Import File', os.getenv('HOME'), 
-            "CSV Files (*.csv);;Text Files (*.txt)")
-        self.df = pd.read_csv(filename[0], index_col=False)
+            # Import the dataframe
+            filename = QFileDialog.getOpenFileName(self, 'Import File', os.getenv('HOME'), 
+                "CSV Files (*.csv);;Text Files (*.txt)")
+            self.df = pd.read_csv(filename[0], index_col=False)
 
-        # Update widgets dataframe and aspect
-        self.table.update_df(self.df)
-        self.kaplan_meier.update_df(self.df)
+            # Update widgets dataframe and aspect
+            self.table.update_df(self.df)
+            self.kaplan_meier.update_df(self.df)
+            self.anova.update_df(self.df)
 
-        self.status_message("")
+            self.status_message("")
+            
+        except Exception as ex:
+            self.status_message(str(ex), timeout=5)
 
 
     def autofill_form (self):
