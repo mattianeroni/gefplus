@@ -167,7 +167,7 @@ class KaplanMeierTab(QWidget):
                     time, survival_prob = kaplan_meier_estimator(sub_df[self.status_var], sub_df[self.survival_var])
                     self.line_plot(time, survival_prob, label=str(val_combo))
         except Exception as ex:
-            self.parent.status_message(str(ex), timeout=5)
+            self.parent.status_message(str(ex), timeout=1000)
     
     def line_plot(self, time, survival, label=None):
         """ Method to generate the plot of a single line """

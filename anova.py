@@ -131,15 +131,23 @@ class AnovaTab(QWidget):
             ss_type = self.ss_box.value()
             anova_df = pg.anova(dv=self.variable, between=list(self.factors), data=self.df,
                 detailed=detailed, effsize=effsize, ss_type=ss_type)
-            #print(anova_df)
+            
             # Populate the table
             self.table_widget.setColumnCount(anova_df.shape[1])
             self.table_widget.setRowCount(anova_df.shape[0])  
             self.table_widget.setHorizontalHeaderLabels(anova_df.columns)
-
             for i in range(self.table_widget.rowCount()):
                 for j in range(self.table_widget.columnCount()):
                     self.table_widget.setItem(i, j, QTableWidgetItem(str(anova_df.iloc[i, j])))
 
         except Exception as ex:
-            self.parent.status_message(str(ex), timeout=5)
+            self.parent.status_message(str(ex), timeout=1000)
+            self.reset_table()
+
+    def reset_table(self):
+        """ Reset the anova table """
+        self.table_widget.setColumnCount(10)
+        self.table_widget.setRowCount(10)  
+        for i in range(self.table_widget.rowCount()):
+            for j in range(self.table_widget.columnCount()):
+                self.table_widget.setItem(i, j, QTableWidgetItem(""))

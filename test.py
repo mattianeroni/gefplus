@@ -14,7 +14,14 @@ df = pd.read_csv("dataset.csv", index_col=None)
 #    func = functools.reduce(operator.and_, (df[var].eq(value) for var, value in zip(filters_var, val_combo)))
 #    #print(df[func])
 #    print(val_combo, func)
+#print(df.shape)
 
-res = pingouin.anova(df, dv="SurvivalDays", between=["Treatment", "Age_in_years"], effsize="n2", 
-            detailed=True, ss_type=1)
+res = pingouin.anova(
+    data=df, 
+    dv="SurvivalDays", 
+    between=["Treatment", "Status", "Age_in_years"], 
+    effsize="n2", 
+    detailed=True, 
+    ss_type=2,
+)
 print(res)
