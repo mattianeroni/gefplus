@@ -14,8 +14,11 @@ The application includes several components such as:
 ![alt text](https://github.com/mattianeroni/gefplus/blob/main/static/screen3.png)
 
 ## Download 
+
 #### v0.1
-<a href="https://github.com/mattianeroni/gefplus/blob/main/dataset.csv" download="filename">Windows (64bits)</a>
-<a href="https://github.com/mattianeroni/gefplus/blob/main/dataset.csv" download="filename">Windows (32bits)</a>
+
+<a href="https://github.com/mattianeroni/gefplus/blob/main/dataset.csv" download>Windows (64bits)</a>
+
+<a href="https://github.com/mattianeroni/gefplus/blob/main/dataset.csv" download>Windows (32bits)</a>
 
 
