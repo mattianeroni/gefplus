@@ -21,4 +21,6 @@ The application includes several components such as:
 
 <a href="https://github.com/mattianeroni/gefplus/blob/main/dataset.csv" download>Windows (32bits)</a>
 
+<a id="raw-url" href="https://github.com/mattianeroni/gefplus/blob/main/dataset.csv">Download FILE</a>
+
 
