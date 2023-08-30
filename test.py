@@ -1,4 +1,6 @@
 import pandas as pd 
+from pandas.api.types import is_numeric_dtype
+
 import numpy as np 
 import itertools
 import functools
@@ -6,22 +8,22 @@ import operator
 import pyqtgraph as pg 
 import pingouin
 
+from sksurv.preprocessing import OneHotEncoder
+from sksurv.datasets import load_veterans_lung_cancer
+
 df = pd.read_csv("dataset.csv", index_col=None)
 
-#filters_var = ("Celltype", )
-#groups = tuple(df[i].unique() for i in filters_var)
-#for val_combo in itertools.product(*groups):
-#    func = functools.reduce(operator.and_, (df[var].eq(value) for var, value in zip(filters_var, val_combo)))
-#    #print(df[func])
-#    print(val_combo, func)
-#print(df.shape)
+def categorical_df (df):
+    """ Transform the categorical variables into numeric ones """
+    df = df.copy()
+    df = df.drop(["SurvivalDays", "Status"], axis=1)
+    for header in df.columns:
+        if not is_numeric_dtype(df[header]):
+            df[header] = df[header].astype("category")
+    return OneHotEncoder().fit_transform(df)
 
-res = pingouin.anova(
-    data=df, 
-    dv="SurvivalDays", 
-    between=["Treatment", "Status", "Age_in_years"], 
-    effsize="n2", 
-    detailed=True, 
-    ss_type=2,
-)
-print(res)
+numeric_df = categorical_df(df)
+print(numeric_df)
+
+
+

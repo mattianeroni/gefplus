@@ -12,8 +12,15 @@ from autofill import AutoFill
 from kaplanmeier import KaplanMeierTab
 from table import TableTab
 from anova import AnovaTab
+from models import ModelsTab
 
-
+# Automated scaling on extended screen
+#QApplication.setAttribute(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
+# Handle high resolution displays:
+#if hasattr(Qt, 'AA_EnableHighDpiScaling'):
+#    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 
 
 class MainUI (QMainWindow):
@@ -38,11 +45,13 @@ class MainUI (QMainWindow):
         self.table = TableTab(self)
         self.kaplan_meier = KaplanMeierTab(self)
         self.anova = AnovaTab(self)
+        self.models = ModelsTab(self)
 
         # Add tabs to the QTabWidget
         self.tabs.addTab(self.table, "Table")
         self.tabs.addTab(self.kaplan_meier, "KaplanMeier")
         self.tabs.addTab(self.anova, "Anova")
+        self.tabs.addTab(self.models, "Models")
         
         # Actions
         self.actionImport.triggered.connect(self.load_data)             # import a new dataset
@@ -77,6 +86,7 @@ class MainUI (QMainWindow):
             self.table.update_df(self.df)
             self.kaplan_meier.update_df(self.df)
             self.anova.update_df(self.df)
+            self.models.update_df(self.df)
 
             self.status_message("")
             

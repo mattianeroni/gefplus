@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QBrush
 from PyQt5 import uic 
@@ -59,13 +59,12 @@ class KaplanMeierTab(QWidget):
         a draggable button for each field of the dataset """
         df = self.df
         self.scroll_layout = QVBoxLayout()
-        for i, header in enumerate(df.columns):
+        for header in df.columns:
             btn = DragButton(header, self)
             self.scroll_layout.addWidget(btn)
 
         self.scroll_holder = QWidget()
         self.scroll_holder.setLayout(self.scroll_layout)
-        self.scroll_holder.setStyleSheet("border-color:black;")
         self.scrollArea.setWidget(self.scroll_holder) 
 
     def dragEnterEvent(self, event):
@@ -77,7 +76,12 @@ class KaplanMeierTab(QWidget):
         the drag n' drop functioning """
         for layout in (self.status_layout, self.survival_layout, self.filters_layout):
             if layout.count() == 0:
-                layout.addWidget(QWidget())
+                widget = QWidget()
+                widget.setStyleSheet("margin:5px; border:1px solid rgb(180, 180, 180);")
+                widget.setMinimumSize(100, 40)
+                widget.setMaximumSize(16777215, 40)
+                layout.addWidget(widget)
+
 
     def dropEvent(self, event):
         """ Method to accept dropping """
@@ -116,12 +120,13 @@ class KaplanMeierTab(QWidget):
                     if layout == self.filters_layout:
                         if not isinstance(widget, DragButton):
                             layout.removeWidget(widget)
-
+                            widget.deleteLater()
                         layout.insertWidget(i - 1, button)
                         self.filters_var.add(text)
 
                     elif layout == self.status_layout:
                         layout.removeWidget(widget) 
+                        widget.deleteLater()
                         self.status_var = text 
                         layout.addWidget(button)
                         if isinstance(widget, DragButton):
@@ -129,6 +134,7 @@ class KaplanMeierTab(QWidget):
 
                     elif layout == self.survival_layout:
                         layout.removeWidget(widget) 
+                        widget.deleteLater()
                         self.survival_var = text 
                         layout.addWidget(button)
                         if isinstance(widget, DragButton):

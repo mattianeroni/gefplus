@@ -96,6 +96,7 @@ class AnovaTab(QWidget):
             if widget.x() < pos.x() < widget.x() + widget.size().width() \
                 and widget.y() < pos.y() < widget.y() + widget.size().height():
                 layout.removeWidget(widget) 
+                widget.deleteLater()
                 self.variable = text 
                 layout.addWidget(button)
                 if isinstance(widget, DragButton):
@@ -113,6 +114,7 @@ class AnovaTab(QWidget):
                 and widget.y() < pos.y() < widget.y() + widget.size().height():
                 if not isinstance(widget, DragButton):
                     layout.removeWidget(widget) 
+                    widget.deleteLater()
                 self.factors.add(text) 
                 layout.addWidget(button)
                 event.accept()
