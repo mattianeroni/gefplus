@@ -11,7 +11,7 @@ import pingouin
 from sksurv.preprocessing import OneHotEncoder
 from sksurv.datasets import load_veterans_lung_cancer
 
-df = pd.read_csv("dataset.csv", index_col=None)
+df = pd.read_csv("./test_datasets/dataset.csv", index_col=None)
 
 def categorical_df (df):
     """ Transform the categorical variables into numeric ones """
@@ -23,7 +23,8 @@ def categorical_df (df):
     return OneHotEncoder().fit_transform(df)
 
 numeric_df = categorical_df(df)
-print(numeric_df)
-
-
+y = np.array([ (status, surv)
+        for status, surv in zip(df["Status"].values, df["SurvivalDays"].values)], 
+        dtype=[("Status", '?'), ("SurvivalDays", '<f8')])
+print(y)
 

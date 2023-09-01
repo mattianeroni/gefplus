@@ -17,8 +17,8 @@ from models import ModelsTab
 # Automated scaling on extended screen
 #QApplication.setAttribute(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
 # Handle high resolution displays:
-#if hasattr(Qt, 'AA_EnableHighDpiScaling'):
-#    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+if hasattr(Qt, 'AA_EnableHighDpiScaling'):
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 
@@ -51,7 +51,7 @@ class MainUI (QMainWindow):
         self.tabs.addTab(self.table, "Table")
         self.tabs.addTab(self.kaplan_meier, "KaplanMeier")
         self.tabs.addTab(self.anova, "Anova")
-        self.tabs.addTab(self.models, "Models")
+        self.tabs.addTab(self.models, "Prediction Models")
         
         # Actions
         self.actionImport.triggered.connect(self.load_data)             # import a new dataset
@@ -91,7 +91,7 @@ class MainUI (QMainWindow):
             self.status_message("")
             
         except Exception as ex:
-            self.status_message(str(ex), timeout=5)
+            self.status_message(str(ex), timeout=1000)
 
 
     def autofill_form (self):

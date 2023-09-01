@@ -107,7 +107,7 @@ class KaplanMeierTab(QWidget):
                 self.scroll_layout.addWidget(button)
                 event.accept()
                 self.add_dummy_widgets()
-                self.plot()
+                self.run()
                 return
         
         # Then verify the insertion in the other areas --i.e., filters, status, and survival
@@ -126,27 +126,31 @@ class KaplanMeierTab(QWidget):
 
                     elif layout == self.status_layout:
                         layout.removeWidget(widget) 
-                        widget.deleteLater()
+                        #widget.deleteLater()
                         self.status_var = text 
                         layout.addWidget(button)
                         if isinstance(widget, DragButton):
                             self.scroll_layout.addWidget(widget)  
+                        else:
+                            widget.deleteLater()
 
                     elif layout == self.survival_layout:
                         layout.removeWidget(widget) 
-                        widget.deleteLater()
+                        #widget.deleteLater()
                         self.survival_var = text 
                         layout.addWidget(button)
                         if isinstance(widget, DragButton):
-                            self.scroll_layout.addWidget(widget)    
+                            self.scroll_layout.addWidget(widget)  
+                        else:
+                            widget.deleteLater()  
 
                     event.accept()
                     self.add_dummy_widgets()
-                    self.plot()
+                    self.run()
                     return
         event.ignore()       
         
-    def plot(self):
+    def run (self):
         """ Method to update the plot of the Kaplan Meier curve """
         df = self.df 
         # Reset plot
@@ -175,7 +179,7 @@ class KaplanMeierTab(QWidget):
         except Exception as ex:
             self.parent.status_message(str(ex), timeout=1000)
     
-    def line_plot(self, time, survival, label=None):
+    def line_plot(self, time, survival, *, label=None, width=3, style=Qt.SolidLine, color=None):
         """ Method to generate the plot of a single line """
         # Set plot style
         styles = {'color':'black', 'font-size':'17px'}
@@ -185,7 +189,8 @@ class KaplanMeierTab(QWidget):
         self.legend = self.plotWidget.addLegend()
 
         # Define colors
-        color = np.random.randint(0,255,size=3)
+        if color is None:
+            color = np.random.randint(0, 255, size=3)
         brush_color = QColor()
         brush_color.setRgb(color[0], color[1], color[2])
         brush = QBrush()
@@ -194,7 +199,7 @@ class KaplanMeierTab(QWidget):
 
         # Plot
         line = self.plotWidget.plot(time, survival, name=label,
-            pen=pg.mkPen(color=color,width=3, style=Qt.SolidLine), 
+            pen=pg.mkPen(color=color, width=width, style=style), 
             symbol="o",
             symbolSize=4,
             symbolBrush=brush,

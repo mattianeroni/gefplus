@@ -96,11 +96,13 @@ class AnovaTab(QWidget):
             if widget.x() < pos.x() < widget.x() + widget.size().width() \
                 and widget.y() < pos.y() < widget.y() + widget.size().height():
                 layout.removeWidget(widget) 
-                widget.deleteLater()
+                #widget.deleteLater()
                 self.variable = text 
                 layout.addWidget(button)
                 if isinstance(widget, DragButton):
                     self.scroll_layout.addWidget(widget)  
+                else:
+                    widget.deleteLater()
                 event.accept()
                 self.add_dummy_widgets()
                 self.plot_table()

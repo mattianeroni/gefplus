@@ -15,7 +15,7 @@ The application includes several components such as:
 
 ## Download 
 
-#### v0.1
+### v0.1
 
 <a href="https://github.com/mattianeroni/gefplus/blob/main/dataset.csv" download>Windows (64bits)</a>
 
