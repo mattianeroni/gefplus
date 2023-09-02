@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget
 from PyQt5 import uic 
 
-from tablemodel import TableModel
+from gefplus.components.tablemodel import TableModel
 
 
 class TableTab(QWidget):
@@ -11,7 +11,7 @@ class TableTab(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        uic.loadUi("./ui/table.ui", self)
+        uic.loadUi("./gefplus/ui/table.ui", self)
         self.df = parent.df
         self.model = TableModel(self.df)
         self.table.setModel(self.model)

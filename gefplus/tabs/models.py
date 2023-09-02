@@ -14,8 +14,8 @@ from sksurv.preprocessing import OneHotEncoder
 from sksurv.linear_model import CoxPHSurvivalAnalysis
 from sklearn.model_selection import train_test_split
 
-from dragbutton import DragButton
-from tablemodel import TableModel
+from gefplus.components.dragbutton import DragButton
+from gefplus.components.tablemodel import TableModel
 
 
 
@@ -27,7 +27,7 @@ class ModelsTab (QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         # Import graphics
-        uic.loadUi("./ui/models.ui", self)
+        uic.loadUi("./gefplus/ui/models.ui", self)
         self.parent = parent
 
         # Save data frame 
@@ -63,7 +63,7 @@ class ModelsTab (QWidget):
         # Actions
         self.model_box.currentTextChanged.connect(self.run)
         self.test_box.valueChanged.connect(self.run)
-        self.pred_len_box.valueChanged.connect(self.run)
+        self.pred_len_box.valueChanged.connect(self.prediction)
         self.import_button.clicked.connect(self.read_test_data)
 
     def update_df(self, df):
@@ -155,7 +155,7 @@ class ModelsTab (QWidget):
         """ Transform the categorical variables into numeric ones """
         if self.status_var is not None and self.survival_var is not None:
             df = self.df.copy()
-            df = df.drop([self.survival_var, self.status_var], axis=1)
+            df = df.drop([self.survival_var, self.status_var], axis=1, errors='ignore')
             for header in df.columns:
                 if not is_numeric_dtype(df[header]):
                     df[header] = df[header].astype("category")
@@ -233,7 +233,7 @@ class ModelsTab (QWidget):
         filename = QFileDialog.getOpenFileName(self, 'Import Test Dataset', os.getenv('HOME'), 
                 "CSV Files (*.csv);;Text Files (*.txt)")
         self.test_df = pd.read_csv(filename[0], index_col=False)
-        self.test_df = self.test_df.drop([self.survival_var, self.status_var], axis=1)
+        self.test_df = self.test_df.drop([self.survival_var, self.status_var], axis=1, errors='ignore')
         for header in self.test_df.columns:
             if not is_numeric_dtype(self.test_df[header]):
                 self.test_df[header] = self.test_df[header].astype("category")
@@ -246,20 +246,20 @@ class ModelsTab (QWidget):
 
     def prediction (self):
         """ Make a prediction on test dataset """
-        #try:
-        self.build_categorical_df()
-        test_df = self.one_hot_encoder.transform(self.test_df)
-        prediction_length = int(self.pred_len_box.value())
+        try:
+            self.build_categorical_df()
+            test_df = self.one_hot_encoder.transform(self.test_df)
+            prediction_length = int(self.pred_len_box.value())
 
-        # Plot the tests
-        if self.legend: self.legend.clear()
-        for line in self.lines: line.clear()
-        pred_surv = self.estimator.predict_survival_function(test_df)
-        time_points = np.arange(1, prediction_length)
-        for i, surv_func in enumerate(pred_surv):
-            self.line_plot(time_points, surv_func(time_points), label=f"Sample {i + 1}")
-        #except Exception as ex:
-        #    self.parent.status_message(str(ex), timeout=1000)
+            # Plot the tests
+            if self.legend: self.legend.clear()
+            for line in self.lines: line.clear()
+            pred_surv = self.estimator.predict_survival_function(test_df)
+            time_points = np.arange(1, prediction_length)
+            for i, surv_func in enumerate(pred_surv):
+                self.line_plot(time_points, surv_func(time_points), label=f"Sample {i + 1}")
+        except Exception as ex:
+            self.parent.status_message(str(ex), timeout=1000)
 
 
     def line_plot(self, time, survival, *, label=None, width=3, style=Qt.SolidLine, color=None):

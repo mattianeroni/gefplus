@@ -1,8 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSizePolicy
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QBrush
-from PyQt5 import uic 
-from pyqtgraph import PlotWidget, plot
+from PyQt5 import uic
 import pyqtgraph as pg
 
 import sys 
@@ -16,7 +15,8 @@ import numpy as np
 from pandas.api.types import is_numeric_dtype
 from sksurv.nonparametric import kaplan_meier_estimator
 
-from dragbutton import DragButton
+from gefplus.components.dragbutton import DragButton
+from gefplus.components.plotmanager import PlotManager
 
 
 
@@ -26,13 +26,12 @@ class KaplanMeierTab(QWidget):
     curve representation and analysis """
 
     def __init__(self, parent=None):
-        super().__init__(parent)
-        # Import graphics
-        uic.loadUi("./ui/kaplanmeier.ui", self)
-
-        # Save data frame 
+        QWidget.__init__(self, parent=parent)
+        uic.loadUi("./gefplus/ui/kaplanmeier.ui", self)
+        
         self.df = parent.df 
         self.parent = parent
+        self.plot_manager = PlotManager(self.plotWidget)
 
         # Allow drag n' drop
         self.setAcceptDrops(True)
@@ -44,10 +43,6 @@ class KaplanMeierTab(QWidget):
         self.status_var = None 
         self.filters_var = set()
         
-        # Plot characteristics
-        self.plotWidget.setBackground('w')
-        self.legend = None
-        self.lines = []
 
     def update_df(self, df):
         """ Set a new data frame """
@@ -153,17 +148,12 @@ class KaplanMeierTab(QWidget):
     def run (self):
         """ Method to update the plot of the Kaplan Meier curve """
         df = self.df 
-        # Reset plot
-        if self.legend:
-            self.legend.clear()
-        for line in self.lines:
-            line.clear()
-        # New plot
+        self.plot_manager.reset_plot()
         try:
             if len(self.filters_var) == 0:
                 status_series, survival_series = self.df[self.status_var], self.df[self.survival_var]
                 time, survival_prob = kaplan_meier_estimator(status_series, survival_series)
-                self.line_plot(time, survival_prob)
+                self.plot_manager.line_plot(time, survival_prob)
             else:
                 # Find all combinations of filtered variables
                 groups = tuple(df[i].unique() for i in self.filters_var)
@@ -175,34 +165,9 @@ class KaplanMeierTab(QWidget):
                     sub_df = df[func]
                     # Compute the curve 
                     time, survival_prob = kaplan_meier_estimator(sub_df[self.status_var], sub_df[self.survival_var])
-                    self.line_plot(time, survival_prob, label=str(val_combo))
+                    self.plot_manager.line_plot(time, survival_prob, label=str(val_combo))
         except Exception as ex:
             self.parent.status_message(str(ex), timeout=1000)
     
-    def line_plot(self, time, survival, *, label=None, width=3, style=Qt.SolidLine, color=None):
-        """ Method to generate the plot of a single line """
-        # Set plot style
-        styles = {'color':'black', 'font-size':'17px'}
-        self.plotWidget.setLabel('left', 'Survival', **styles)
-        self.plotWidget.setLabel('bottom', 'Time', **styles)
-        self.plotWidget.showGrid(x=False, y=True)
-        self.legend = self.plotWidget.addLegend()
-
-        # Define colors
-        if color is None:
-            color = np.random.randint(0, 255, size=3)
-        brush_color = QColor()
-        brush_color.setRgb(color[0], color[1], color[2])
-        brush = QBrush()
-        brush.setColor(brush_color)
-        brush.setStyle(Qt.SolidPattern)
-
-        # Plot
-        line = self.plotWidget.plot(time, survival, name=label,
-            pen=pg.mkPen(color=color, width=width, style=style), 
-            symbol="o",
-            symbolSize=4,
-            symbolBrush=brush,
-        )
-        self.lines.append(line)
+    
         

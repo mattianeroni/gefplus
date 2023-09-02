@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd 
 import pingouin as pg 
 
-from dragbutton import DragButton
+from gefplus.components.dragbutton import DragButton
 
 
 class AnovaTab(QWidget):
@@ -16,7 +16,7 @@ class AnovaTab(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         # Import graphics
-        uic.loadUi("./ui/anova.ui", self)
+        uic.loadUi("./gefplus/ui/anova.ui", self)
 
         # Save data frame 
         self.df = parent.df 
