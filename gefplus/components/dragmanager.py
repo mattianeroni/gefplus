@@ -38,11 +38,16 @@ class DragManager:
 
     def get_content (self, layout):
         """ Get names of buttons in a layout """
-        count = len([i for i in range(layout.count()) if isinstance(layout.itemAt(i).widget(), DragButton)])
-        if count == 0: 
+        #count = len([i for i in range(layout.count()) if isinstance(layout.itemAt(i).widget(), DragButton)])
+        if layout.count() == 0: 
             return
         fields = tuple(layout.itemAt(i).widget().text() 
             for i in range(layout.count()) if isinstance(layout.itemAt(i).widget(), DragButton))
+        if len(fields) == 0:
+            if layout in self.single_choice_layouts:
+                return None 
+            elif layout in self.multi_choice_layouts:
+                return fields
         return fields[0] if len(fields) == 1 and layout in self.single_choice_layouts else fields
     
     @property 
@@ -76,7 +81,6 @@ class DragManager:
     def add_dummy_widgets(self):
         """ Add a dummy widget to the layouts to ensure 
         the drag n' drop functioning """
-        #print([layout.count() for layout in self.all_layouts])
         for layout in itertools.chain(self.single_choice_layouts, self.multi_choice_layouts):
             if layout.count() == 0:
                 widget = QWidget()

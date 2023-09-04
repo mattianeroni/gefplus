@@ -77,6 +77,7 @@ class ModelsTab (QWidget):
         self.df = df
         self.drag_manager.populate_buttons(self.df.columns, clear=True)   
         self.plot_manager.reset_plot()
+        self.reset_stats()
         self.estimator = None 
         self.one_hot_encoder = None 
 
@@ -110,44 +111,44 @@ class ModelsTab (QWidget):
         """ Run the estimation model """
         EstimatorClass = self.models[self.model_box.currentText()]
         test_size = float(self.test_box.value()) / 100.0
-        #try:
-        status = self.drag_manager.get_content(self.status_layout)
-        survival = self.drag_manager.get_content(self.survival_layout)
-        if status is not None and survival is not None:
-            y = np.array([ (status, surv)
-                for status, surv in zip(self.df[status].values, self.df[survival].values)], 
-                dtype=[(status, '?'), (survival, '<f8')]) 
-            
-            self.one_hot_encoder, self.categorical_df = self.build_categorical_df(self.df, survival, status)
-            X_train, X_test, y_train, y_test = train_test_split(self.categorical_df.index, y, test_size=test_size)
-            train_df, test_df = self.categorical_df.iloc[X_train], self.categorical_df.iloc[X_test]
-            
-            features_impact = self.variables_score(
-                estimator=EstimatorClass(),
-                train_df=train_df,
-                y_train=y_train
-            )
-            
-            self.estimator = EstimatorClass()
-            self.estimator.fit(train_df, y_train)
-            train_score = self.estimator.score(train_df, y_train)
-            test_score = self.estimator.score(test_df, y_test)
+        try:
+            status = self.drag_manager.get_content(self.status_layout)
+            survival = self.drag_manager.get_content(self.survival_layout)
+            if status is not None and survival is not None:
+                y = np.array([ (status, surv)
+                    for status, surv in zip(self.df[status].values, self.df[survival].values)], 
+                    dtype=[(status, '?'), (survival, '<f8')]) 
+                
+                self.one_hot_encoder, self.categorical_df = self.build_categorical_df(self.df, survival, status)
+                X_train, X_test, y_train, y_test = train_test_split(self.categorical_df.index, y, test_size=test_size)
+                train_df, test_df = self.categorical_df.iloc[X_train], self.categorical_df.iloc[X_test]
+                
+                features_impact = self.variables_score(
+                    estimator=EstimatorClass(),
+                    train_df=train_df,
+                    y_train=y_train
+                )
+                
+                self.estimator = EstimatorClass()
+                self.estimator.fit(train_df, y_train)
+                train_score = self.estimator.score(train_df, y_train)
+                test_score = self.estimator.score(test_df, y_test)
 
-            self.reset_stats()
-            for name, value in features_impact.items():
-                name_label = QLabel(f"{name}: ")
-                value_label = QLabel(f"{round(value, 5)}")
-                name_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
-                value_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
-                self.name_layout.addWidget(name_label)
-                self.value_layout.addWidget(value_label)
-            self.name_layout.addWidget(QLabel("Train score: "))
-            self.name_layout.addWidget(QLabel("Test score: "))
-            self.value_layout.addWidget(QLabel(f"{round(train_score, 5)}"))
-            self.value_layout.addWidget(QLabel(f"{round(test_score, 5)}"))
+                self.reset_stats()
+                for name, value in features_impact.items():
+                    name_label = QLabel(f"{name}: ")
+                    value_label = QLabel(f"{round(value, 5)}")
+                    name_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+                    value_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+                    self.name_layout.addWidget(name_label)
+                    self.value_layout.addWidget(value_label)
+                self.name_layout.addWidget(QLabel("Train score: "))
+                self.name_layout.addWidget(QLabel("Test score: "))
+                self.value_layout.addWidget(QLabel(f"{round(train_score, 5)}"))
+                self.value_layout.addWidget(QLabel(f"{round(test_score, 5)}"))
 
-        #except Exception as ex:
-        #    self.parent.status_message(str(ex), timeout=1000)
+        except Exception as ex:
+            self.parent.status_message(str(ex), timeout=1000)
 
 
     def read_test_data (self):
