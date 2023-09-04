@@ -9,9 +9,9 @@ The application includes several components such as:
 - Features Selection
 - Cox's Proportional Hazard's model
 
-![alt text](https://github.com/mattianeroni/gefplus/blob/main/static/screen1.png)
-![alt text](https://github.com/mattianeroni/gefplus/blob/main/static/screen2.png)
-![alt text](https://github.com/mattianeroni/gefplus/blob/main/static/screen3.png)
+![alt text](https://github.com/mattianeroni/gefplus/blob/main/gefplus/static/screen1.png)
+![alt text](https://github.com/mattianeroni/gefplus/blob/main/gefplus/static/screen2.png)
+![alt text](https://github.com/mattianeroni/gefplus/blob/main/gefplus/static/screen3.png)
 
 ## Download 
 
