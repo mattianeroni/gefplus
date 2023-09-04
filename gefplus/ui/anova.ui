@@ -268,6 +268,12 @@
      </item>
      <item row="0" column="1">
       <widget class="QTableWidget" name="table_widget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="rowCount">
         <number>10</number>
        </property>

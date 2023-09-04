@@ -1,6 +1,8 @@
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore import Qt, QObject
 from PyQt5.QtGui import QColor, QBrush
 import pyqtgraph as pg
+from pyqtgraph import PlotWidget
 
 import numpy as np
 
@@ -8,12 +10,12 @@ import numpy as np
 
 class PlotManager:
 
-    """ Abstract class representing a tab that may include 
-    a plot """
+    """ Instance for managing the plotting in an easier way """
 
-    def __init__(self, plot_widget, bg='w', styles=None):
+    def __init__(self, plot_widget, parent=None, bg='w', styles=None):
         self.plot_widget = plot_widget
         self.plot_widget.setBackground(bg)
+        self.parent = parent
         self.legend = None
         self.lines = []
         self.styles = styles

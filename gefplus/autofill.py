@@ -19,7 +19,6 @@ class AutoFill (QDialog):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-
         self.setWindowTitle("Autofill")
         self.resize(630, 150)
         self.main_window = parent
@@ -82,5 +81,6 @@ class AutoFill (QDialog):
         except:
             self.main_window.box_message("404. Unknown error.")
 
-        self.main_window.populate_table()
+        self.main_window.df = df
+        self.main_window.update_df()
         self.close()

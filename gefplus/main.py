@@ -72,27 +72,25 @@ class MainUI (QMainWindow):
         """ Method to log a message presented in the status bar """
         self.statusbar.showMessage(message, msecs=timeout)
 
+    def update_df (self):
+        """ Update the df for all the components """
+        self.table.update_df(self.df)
+        self.kaplan_meier.update_df(self.df)
+        self.anova.update_df(self.df)
+        self.models.update_df(self.df)
+
     def load_data (self):
         """ Import the dataset """
         try:
             self.status_message("Loading...")
-
-            # Import the dataframe
             filename = QFileDialog.getOpenFileName(self, 'Import File', os.getenv('HOME'), 
                 "CSV Files (*.csv);;Text Files (*.txt)")
             self.df = pd.read_csv(filename[0], index_col=False)
-
-            # Update widgets dataframe and aspect
-            self.table.update_df(self.df)
-            self.kaplan_meier.update_df(self.df)
-            self.anova.update_df(self.df)
-            self.models.update_df(self.df)
-
+            self.update_df()
             self.status_message("")
             
         except Exception as ex:
             self.status_message(str(ex), timeout=1000)
-
 
     def autofill_form (self):
         """ Open UI for data autofilling """
