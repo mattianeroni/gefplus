@@ -38,7 +38,8 @@ class DragManager:
 
     def get_content (self, layout):
         """ Get names of buttons in a layout """
-        if layout.count() == 0: 
+        count = len([i for i in range(layout.count()) if isinstance(layout.itemAt(i).widget(), DragButton)])
+        if count == 0: 
             return
         fields = tuple(layout.itemAt(i).widget().text() 
             for i in range(layout.count()) if isinstance(layout.itemAt(i).widget(), DragButton))

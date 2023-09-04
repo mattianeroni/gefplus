@@ -110,47 +110,44 @@ class ModelsTab (QWidget):
         """ Run the estimation model """
         EstimatorClass = self.models[self.model_box.currentText()]
         test_size = float(self.test_box.value()) / 100.0
-        try:
-            status = self.drag_manager.get_content(self.status_layout)
-            survival = self.drag_manager.get_content(self.survival_layout)
-            if status is not None and survival is not None:
-                # Extract output in the correct format for the estimator
-                y = np.array([ (status, surv)
-                    for status, surv in zip(self.df[status].values, self.df[survival].values)], 
-                    dtype=[(status, '?'), (survival, '<f8')]) 
-                # Clean categorical data
-                self.one_hot_encoder, self.categorical_df = self.build_categorical_df(self.df, survival, status)
-                # Build train and test datasets
-                X_train, X_test, y_train, y_test = train_test_split(df.index, y, test_size=test_size)
-                train_df, test_df = df.iloc[X_train], df.iloc[X_test]
-                # Record the impact of each feature singularly 
-                features_impact = self.variables_score(
-                    estimator=EstimatorClass(),
-                    train_df=train_df,
-                    y_train=y_train
-                )
-                # Train and test the model on the whole dataset 
-                self.estimator = EstimatorClass()
-                self.estimator.fit(train_df, y_train)
-                train_score = self.estimator.score(train_df, y_train)
-                test_score = self.estimator.score(test_df, y_test)
+        #try:
+        status = self.drag_manager.get_content(self.status_layout)
+        survival = self.drag_manager.get_content(self.survival_layout)
+        if status is not None and survival is not None:
+            y = np.array([ (status, surv)
+                for status, surv in zip(self.df[status].values, self.df[survival].values)], 
+                dtype=[(status, '?'), (survival, '<f8')]) 
+            
+            self.one_hot_encoder, self.categorical_df = self.build_categorical_df(self.df, survival, status)
+            X_train, X_test, y_train, y_test = train_test_split(self.categorical_df.index, y, test_size=test_size)
+            train_df, test_df = self.categorical_df.iloc[X_train], self.categorical_df.iloc[X_test]
+            
+            features_impact = self.variables_score(
+                estimator=EstimatorClass(),
+                train_df=train_df,
+                y_train=y_train
+            )
+            
+            self.estimator = EstimatorClass()
+            self.estimator.fit(train_df, y_train)
+            train_score = self.estimator.score(train_df, y_train)
+            test_score = self.estimator.score(test_df, y_test)
 
-                # Write stats
-                self.reset_stats()
-                for name, value in features_impact.items():
-                    name_label = QLabel(f"{name}: ")
-                    value_label = QLabel(f"{round(value, 5)}")
-                    name_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
-                    value_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
-                    self.name_layout.addWidget(name_label)
-                    self.value_layout.addWidget(value_label)
-                self.name_layout.addWidget(QLabel("Train score: "))
-                self.name_layout.addWidget(QLabel("Test score: "))
-                self.value_layout.addWidget(QLabel(f"{round(train_score, 5)}"))
-                self.value_layout.addWidget(QLabel(f"{round(test_score, 5)}"))
+            self.reset_stats()
+            for name, value in features_impact.items():
+                name_label = QLabel(f"{name}: ")
+                value_label = QLabel(f"{round(value, 5)}")
+                name_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+                value_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+                self.name_layout.addWidget(name_label)
+                self.value_layout.addWidget(value_label)
+            self.name_layout.addWidget(QLabel("Train score: "))
+            self.name_layout.addWidget(QLabel("Test score: "))
+            self.value_layout.addWidget(QLabel(f"{round(train_score, 5)}"))
+            self.value_layout.addWidget(QLabel(f"{round(test_score, 5)}"))
 
-        except Exception as ex:
-            self.parent.status_message(str(ex), timeout=1000)
+        #except Exception as ex:
+        #    self.parent.status_message(str(ex), timeout=1000)
 
 
     def read_test_data (self):
@@ -176,14 +173,14 @@ class ModelsTab (QWidget):
     def prediction (self):
         """ Make a prediction on test dataset """
         try:
-            self.build_categorical_df()
-            test_df = self.one_hot_encoder.transform(self.test_df)
-            prediction_length = int(self.pred_len_box.value())
-            pred_surv = self.estimator.predict_survival_function(test_df)
-            time_points = np.arange(1, prediction_length)
-            self.plot_manager.reset_plot()
-            for i, surv_func in enumerate(pred_surv):
-                self.plot_manager.line_plot(time_points, surv_func(time_points), label=f"Sample {i + 1}")
+            if self.one_hot_encoder is not None and self.estimator is not None:
+                test_df = self.one_hot_encoder.transform(self.test_df)
+                prediction_length = int(self.pred_len_box.value())
+                pred_surv = self.estimator.predict_survival_function(test_df)
+                time_points = np.arange(1, prediction_length)
+                self.plot_manager.reset_plot()
+                for i, surv_func in enumerate(pred_surv):
+                    self.plot_manager.line_plot(time_points, surv_func(time_points), label=f"Sample {i + 1}")
 
         except Exception as ex:
             self.parent.status_message(str(ex), timeout=1000)
