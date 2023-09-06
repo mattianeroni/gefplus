@@ -18,17 +18,18 @@ from gefplus.components.dragbutton import DragButton
 from gefplus.components.tablemodel import TableModel
 from gefplus.components.plotmanager import PlotManager
 from gefplus.components.dragmanager import DragManager
+from gefplus.ui.main_ui import Ui_modelsTab
 
 
-
-class ModelsTab (QWidget):
+class ModelsTab (QWidget, Ui_modelsTab):
     
     """ This widget contains functionalities for analysis 
     with multi variate survival models """
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        uic.loadUi("./gefplus/ui/models.ui", self)
+        #uic.loadUi("./gefplus/ui/models.ui", self)
+        self.setupUi(self)
         self.df = parent.df 
         self.parent = parent
         self.scroll_layout = QVBoxLayout()

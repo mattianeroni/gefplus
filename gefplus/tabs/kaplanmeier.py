@@ -18,17 +18,18 @@ from sksurv.nonparametric import kaplan_meier_estimator
 from gefplus.components.dragbutton import DragButton
 from gefplus.components.plotmanager import PlotManager
 from gefplus.components.dragmanager import DragManager
+from gefplus.ui.main_ui import Ui_kaplanmeierTab
 
 
-
-class KaplanMeierTab (QWidget):
+class KaplanMeierTab (QWidget, Ui_kaplanmeierTab):
 
     """ This widget contains functionalities for Kaplan Meier
     curve representation and analysis """
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        uic.loadUi("./gefplus/ui/kaplanmeier.ui", self)
+        #uic.loadUi("./gefplus/ui/kaplanmeier.ui", self)
+        self.setupUi(self)
         self.df = parent.df 
         self.parent = parent
         self.scroll_layout = QVBoxLayout()

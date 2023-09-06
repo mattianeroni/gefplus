@@ -4,26 +4,32 @@ from PyQt5 import uic
 
 import sys 
 import os 
+import screeninfo
 
 import numpy as np 
 import pandas as pd 
 
-from autofill import AutoFill
+from gefplus.autofill import AutoFill
 from gefplus.tabs.kaplanmeier import KaplanMeierTab
 from gefplus.tabs.table import TableTab
 from gefplus.tabs.anova import AnovaTab
 from gefplus.tabs.models import ModelsTab
+from gefplus.ui.main_ui import Ui_GEF
 
 # Automated scaling on extended screen
 #QApplication.setAttribute(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
 # Handle high resolution displays:
-#if hasattr(Qt, 'AA_EnableHighDpiScaling'):
-#    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
-if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
-    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+
+if len(screeninfo.get_monitors()) > 1:
+    if hasattr(Qt, 'AA_EnableHighDpiScaling'):
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
+        QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+
+#os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
 
-class MainUI (QMainWindow):
+class MainUI (QMainWindow, Ui_GEF):
 
     """ This class represents the main UI the whole application starts from """
 
@@ -31,7 +37,8 @@ class MainUI (QMainWindow):
         super().__init__()
 
         # Load graphics and init main window
-        uic.loadUi("./gefplus/ui/main.ui", self)
+        #uic.loadUi(os.path.abspath("./gefplus/ui/main.ui"), self)
+        self.setupUi(self)
 
         # Init the app dataframe 
         example_data = {f"Column_{i}" : np.zeros(1000).tolist() for i in range(1000)}

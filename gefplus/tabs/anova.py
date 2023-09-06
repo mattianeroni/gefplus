@@ -8,15 +8,17 @@ import pingouin as pg
 
 from gefplus.components.dragbutton import DragButton
 from gefplus.components.dragmanager import DragManager
+from gefplus.ui.main_ui import Ui_anovaTab
 
 
-class AnovaTab(QWidget):
+class AnovaTab(QWidget, Ui_anovaTab):
 
     """ This widget contains functionalities for ANOVA analysis """
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        uic.loadUi("./gefplus/ui/anova.ui", self)
+        #uic.loadUi("./gefplus/ui/anova.ui", self)
+        self.setupUi(self)
         self.df = parent.df 
         self.parent = parent
         self.scroll_layout = QVBoxLayout()
