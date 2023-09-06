@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5 import uic 
 
 from gefplus.components.tablemodel import TableModel
-from gefplus.ui.main_ui import Ui_Form
+from gefplus.ui.table_ui import Ui_Form
 
 class TableTab(QWidget, Ui_Form):
 

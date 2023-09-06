@@ -18,7 +18,7 @@ from gefplus.components.dragbutton import DragButton
 from gefplus.components.tablemodel import TableModel
 from gefplus.components.plotmanager import PlotManager
 from gefplus.components.dragmanager import DragManager
-from gefplus.ui.main_ui import Ui_modelsTab
+from gefplus.ui.models_ui import Ui_modelsTab
 
 
 class ModelsTab (QWidget, Ui_modelsTab):

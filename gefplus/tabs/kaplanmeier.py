@@ -18,7 +18,7 @@ from sksurv.nonparametric import kaplan_meier_estimator
 from gefplus.components.dragbutton import DragButton
 from gefplus.components.plotmanager import PlotManager
 from gefplus.components.dragmanager import DragManager
-from gefplus.ui.main_ui import Ui_kaplanmeierTab
+from gefplus.ui.kaplanmeier_ui import Ui_kaplanmeierTab
 
 
 class KaplanMeierTab (QWidget, Ui_kaplanmeierTab):

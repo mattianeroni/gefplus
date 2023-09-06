@@ -8,7 +8,7 @@ import pingouin as pg
 
 from gefplus.components.dragbutton import DragButton
 from gefplus.components.dragmanager import DragManager
-from gefplus.ui.main_ui import Ui_anovaTab
+from gefplus.ui.anova_ui import Ui_anovaTab
 
 
 class AnovaTab(QWidget, Ui_anovaTab):
