@@ -18,6 +18,6 @@ The application includes several components such as:
 
 ### Windows (Vista, 7, 8, 10) - v0.1.0
 
-<a href="https://drive.google.com/file/d/1C9Jq37eeUPVflnILc32ZNYqYQ5JcOEn7/view?usp=sharing" download>Windows (64bits)</a>
+- <a href="https://drive.google.com/file/d/1C9Jq37eeUPVflnILc32ZNYqYQ5JcOEn7/view?usp=sharing" download>Windows (64bits)</a>
 
 
