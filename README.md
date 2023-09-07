@@ -12,6 +12,7 @@ The application includes several components such as:
 ![alt text](https://github.com/mattianeroni/gefplus/blob/main/gefplus/static/screen1.png)
 ![alt text](https://github.com/mattianeroni/gefplus/blob/main/gefplus/static/screen2.png)
 ![alt text](https://github.com/mattianeroni/gefplus/blob/main/gefplus/static/screen3.png)
+![alt text](https://github.com/mattianeroni/gefplus/blob/main/gefplus/static/screen4.png)
 
 ## Download 
 
