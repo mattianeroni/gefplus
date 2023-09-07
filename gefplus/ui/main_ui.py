@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 # Changes
 #---------------------------------------------------
-from absolute_path import absolute_path
+from gefplus.ui.absolute_path import absolute_path
 #---------------------------------------------------
 
 
