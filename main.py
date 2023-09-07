@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTabWidget, QFileDialog, QMessageBox
 from PyQt5.QtCore import Qt
-from PyQt5 import uic 
+from PyQt5 import uic, QtGui
 
 import sys 
 import os 
@@ -10,11 +10,13 @@ import numpy as np
 import pandas as pd 
 
 from gefplus.autofill import AutoFill
+from gefplus.absolute_path import absolute_path
 from gefplus.tabs.kaplanmeier import KaplanMeierTab
 from gefplus.tabs.table import TableTab
 from gefplus.tabs.anova import AnovaTab
 from gefplus.tabs.models import ModelsTab
 from gefplus.ui.main_ui import Ui_GEF
+
 
 # Automated scaling on extended screen
 #QApplication.setAttribute(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
@@ -29,6 +31,7 @@ if len(screeninfo.get_monitors()) > 1:
 #os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
 
+
 class MainUI (QMainWindow, Ui_GEF):
 
     """ This class represents the main UI the whole application starts from """
@@ -39,6 +42,23 @@ class MainUI (QMainWindow, Ui_GEF):
         # Load graphics and init main window
         #uic.loadUi(os.path.abspath("./gefplus/ui/main.ui"), self)
         self.setupUi(self)
+
+        # Icons
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(absolute_path("static/logosmall.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.setWindowIcon(icon)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(absolute_path("static/export.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.menuExport.setIcon(icon1)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(absolute_path("static/import.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionImport.setIcon(icon2)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(absolute_path("static/settings.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionSettings.setIcon(icon3)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(absolute_path("static/autofill.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionAutocomplete.setIcon(icon4)
 
         # Init the app dataframe 
         example_data = {f"Column_{i}" : np.zeros(1000).tolist() for i in range(1000)}

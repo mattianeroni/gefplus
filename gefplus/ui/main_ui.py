@@ -10,11 +10,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-# Changes
-#---------------------------------------------------
-from gefplus.ui.absolute_path import absolute_path
-#---------------------------------------------------
-
 
 
 class Ui_GEF(object):
@@ -22,7 +17,7 @@ class Ui_GEF(object):
         GEF.setObjectName("GEF")
         GEF.resize(890, 436)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(absolute_path("static/logosmall.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon.addPixmap(QtGui.QPixmap(absolute_path("static/logosmall.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         GEF.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(GEF)
         self.centralwidget.setObjectName("centralwidget")
@@ -36,7 +31,7 @@ class Ui_GEF(object):
         self.menuFile.setObjectName("menuFile")
         self.menuExport = QtWidgets.QMenu(self.menuFile)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(absolute_path("static/export.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon1.addPixmap(QtGui.QPixmap(absolute_path("static/export.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.menuExport.setIcon(icon1)
         self.menuExport.setObjectName("menuExport")
         self.menuData = QtWidgets.QMenu(self.menubar)
@@ -47,7 +42,7 @@ class Ui_GEF(object):
         GEF.setStatusBar(self.statusbar)
         self.actionImport = QtWidgets.QAction(GEF)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(absolute_path("static/import.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon2.addPixmap(QtGui.QPixmap(absolute_path("static/import.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionImport.setIcon(icon2)
         self.actionImport.setObjectName("actionImport")
         self.settings = QtWidgets.QAction(GEF)
@@ -58,12 +53,12 @@ class Ui_GEF(object):
         self.actionCSV_csv.setObjectName("actionCSV_csv")
         self.actionSettings = QtWidgets.QAction(GEF)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(absolute_path("static/settings.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon3.addPixmap(QtGui.QPixmap(absolute_path("static/settings.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionSettings.setIcon(icon3)
         self.actionSettings.setObjectName("actionSettings")
         self.actionAutocomplete = QtWidgets.QAction(GEF)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(absolute_path("static/autofill.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon4.addPixmap(QtGui.QPixmap(absolute_path("static/autofill.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionAutocomplete.setIcon(icon4)
         self.actionAutocomplete.setObjectName("actionAutocomplete")
         self.menuExport.addAction(self.actionExport_Current)
